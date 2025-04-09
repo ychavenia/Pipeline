@@ -6,7 +6,6 @@ from even_or_odd import is_even
 
 class TestEvenOrOdd(unittest.TestCase):
 
-
     def test_is_even(self):
         self.assertTrue(is_even(2))
         self.assertTrue(is_even(0))
