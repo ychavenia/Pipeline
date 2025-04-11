@@ -28,10 +28,9 @@ jobs:
         run: flake8 . --max-line-length=88
 
       - name: Run Unit Tests and Coverage Report
-        run: pytest --cov=app
-
-      - name: List files
-        run: ls -la  # Debugging step to check for .coverage file
+        run: |
+          pytest --cov=app
+          ls -la  # List files to check for .coverage file
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
