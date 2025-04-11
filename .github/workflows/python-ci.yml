@@ -34,6 +34,13 @@ jobs:
           coverage report
           coverage xml
 
+      - name: Debug output
+        run: |
+          echo "Listing files:"
+          ls -l
+          echo "Coverage report content:"
+          cat coverage.xml
+
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
@@ -48,3 +55,4 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
