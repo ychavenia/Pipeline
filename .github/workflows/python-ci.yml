@@ -30,11 +30,14 @@ jobs:
       - name: Run Unit Tests and Coverage Report
         run: pytest --cov=app
 
+      - name: List files
+        run: ls -la  # Debugging step to check for .coverage file
+
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: .coverage
+          path: .coverage  # Ensure this path is correct
 
       - name: Install Tox
         run: pip install tox
