@@ -30,20 +30,19 @@ jobs:
 
       - name: Run Unit Tests and Generate Coverage Report
         run: |
-          coverage run -m pytest
+          # Replace 'your_module' with the actual folder name of your Python source code
+          coverage run --source=your_module -m pytest
           coverage report
           coverage xml
 
-      - name: Debug coverage.xml output
-        if: always()
+      - name: Check coverage.xml file exists
         run: |
-          echo "Listing files:"
-          ls -l
-          echo "Coverage report content:"
-          cat coverage.xml || echo "coverage.xml not found."
+          echo "Files in workspace:"
+          ls -lah
+          echo "Content of coverage.xml (if exists):"
+          cat coverage.xml || echo "coverage.xml not found!"
 
-      - name: Upload Coverage Report
-        if: success() || failure() # always attempt to upload
+      - name: Upload Coverage Report as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-${{ matrix.python-version }}
@@ -54,9 +53,7 @@ jobs:
         run: tox
 
       - name: Upload coverage reports to Codecov
-        if: matrix.python-version == '3.10' # upload only once, not per version
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
-          fail_ci_if_error: true
