@@ -28,21 +28,20 @@ jobs:
       - name: Run Code Linting (Flake8)
         run: flake8 . --max-line-length=88
 
-      - name: Run Unit Tests and Generate Coverage Report
+      - name: Run Unit Tests and Coverage Report
         run: |
-          # Replace 'your_module' with the actual folder name of your Python source code
-          coverage run --source=your_module -m pytest
+          coverage run -m pytest
           coverage report
           coverage xml
 
-      - name: Check coverage.xml file exists
+      - name: Debug output
         run: |
-          echo "Files in workspace:"
-          ls -lah
-          echo "Content of coverage.xml (if exists):"
-          cat coverage.xml || echo "coverage.xml not found!"
+          echo "Listing files:"
+          ls -l
+          echo "Coverage report content:"
+          cat coverage.xml
 
-      - name: Upload Coverage Report as Artifact
+      - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-${{ matrix.python-version }}
@@ -57,3 +56,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
+          
