@@ -28,20 +28,22 @@ jobs:
       - name: Run Code Linting (Flake8)
         run: flake8 . --max-line-length=88
 
-      - name: Run Unit Tests and Coverage Report
+      - name: Run Unit Tests and Generate Coverage Report
         run: |
           coverage run -m pytest
           coverage report
           coverage xml
 
-      - name: Debug output
+      - name: Debug coverage.xml output
+        if: always()
         run: |
           echo "Listing files:"
           ls -l
           echo "Coverage report content:"
-          cat coverage.xml
+          cat coverage.xml || echo "coverage.xml not found."
 
       - name: Upload Coverage Report
+        if: success() || failure() # always attempt to upload
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report-${{ matrix.python-version }}
@@ -52,7 +54,9 @@ jobs:
         run: tox
 
       - name: Upload coverage reports to Codecov
+        if: matrix.python-version == '3.10' # upload only once, not per version
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
+          fail_ci_if_error: true
